@@ -26,3 +26,5 @@ Route::get('/tasks/add', function (){
 Route::post('/tasks/add', 'HomeController@add')->name('add_task_form');
 
 Route::get('/tasks/edit', 'HomeController@edit')->name('edit_task');
+
+Route::post('/tasks/ajax_done_task', 'HomeController@ajax_done_task')->name('done_task');

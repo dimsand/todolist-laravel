@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTasks;
 use App\Task;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,8 +25,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $tasks = Task::all();
-        return view('home', ['tasks' => $tasks]);
+        $tasks = Task::orderBy('is_done', 'asc')->get();
+        $tasks_done = Task::where('is_done', 1)->get();
+        return view('home', ['tasks' => $tasks, 'nb_tasks_non_done' => count($tasks) - count($tasks_done)]);
     }
 
     public function add(Request $request)
@@ -48,5 +47,13 @@ class HomeController extends Controller
     public function edit()
     {
         return view('edit');
+    }
+
+    public function ajax_done_task(Request $request)
+    {
+        $task = Task::find($request->task_id);
+        $task->is_done = $request->is_done;
+        $task->save();
+        return response()->json();
     }
 }
